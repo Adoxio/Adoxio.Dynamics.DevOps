@@ -4,9 +4,11 @@ Adoxio.Dynamics.DevOps is a PowerShell module for performing DevOps activities f
 
 ## Installation
 
-The recommended installation procedure is to install the PowerShell module from the [PowerShell Gallery](https://www.powershellgallery.com/packages/Adoxio.Dynamics.DevOps/).
+Walkthrough instructions are available in the blog post [Installing Adoxio.Dynamics.DevOps](https://alanmervitz.com/2017/09/09/installing-adoxio-dynamics-devops/).
 
-- Open Windows PowerShell and install the module
+An abbreviated version is as follows:
+
+- Open Windows PowerShell and install the module from the [PowerShell Gallery](https://www.powershellgallery.com/packages/Adoxio.Dynamics.DevOps/)
   ```PowerShell
   Install-Module -Name Adoxio.Dynamics.DevOps -Scope CurrentUser
   ```
