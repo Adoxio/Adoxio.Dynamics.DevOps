@@ -702,7 +702,7 @@ function New-CrmPackage {
         Remove-Item -Path (Join-Path -Path $PackageFolder -ChildPath *) -Recurse
 
         # copy the solutions and data to the package directory
-        @($SolutionZipFiles,$DataZipFile) | Copy-Item -Destination $PackageFolder -ErrorAction Ignore
+        @($SolutionZipFiles,$DataZipFile) | Where-Object { $_ -ne "" } | Copy-Item -Destination $PackageFolder
 
         # generate the ImportConfig.xml file and copy it to the package directory
         NewCrmImportConfigXml -DataZipFile $DataZipFile -SolutionZipFiles $SolutionZipFiles -ImportData:$ImportData -PackageFolder $PackageFolder
@@ -788,9 +788,6 @@ function Invoke-ImportCrmPackage {
        finally { # use finally to ensure these steps are taken even if the script execution is stopped
            # remove the background job
            Remove-Job -Job $job -Force
-           
-           # remove files in the package folder
-           Remove-Item -Path (Join-Path -Path $PackageFolder -ChildPath *) -Recurse
        }
     }
 }
@@ -807,7 +804,7 @@ function NewCrmImportConfigXml {
         $datazipfilename = Split-Path -Path $DataZipFile -Leaf
         $dataimportattribute = "crmmigdataimportfile=""$datazipfilename"""
     } else {
-        $dataimportattribute = ""
+        $dataimportattribute = 'crmmigdataimportfile=""'
     }
 
     $solutionsXml = ""
@@ -818,7 +815,12 @@ function NewCrmImportConfigXml {
 
     $importConfig = @"
 <?xml version="1.0" encoding="utf-16"?>
-<configdatastorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" installsampledata="false" $dataimportattribute>
+<configdatastorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                                         installsampledata="false"
+                                                                         waitforsampledatatoinstall="false"
+                                                                         agentdesktopzipfile=""
+                                                                         agentdesktopexename=""
+                                                                         $dataimportattribute>
   <solutions>
     $solutionsXml
   </solutions>
