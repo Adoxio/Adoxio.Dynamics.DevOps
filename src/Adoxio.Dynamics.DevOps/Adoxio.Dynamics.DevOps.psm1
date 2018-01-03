@@ -1284,101 +1284,89 @@ function Edit-CrmSchemaFile {
         [hashtable]
         $EntityFieldFilters
     )
-
-    if($PSCmdlet.MyInvocation.InvocationName -eq 'Set-CrmSchemaFile') {
-        Write-Warning "$($PSCmdlet.MyInvocation.InvocationName) is a deprecated name and will be removed in a future version, use $($PSCmdlet.CommandRuntime) instead"
-    }
-
-    $xml = [xml](Get-Content -Path $Path -Encoding UTF8)
-
-    if($EntityFilter) {
-        $keepEntities = $xml.entities.entity | Where-Object -FilterScript $EntityFilter
-        $removeEntities = $xml.entities.entity | Where-Object -FilterScript {$_ -notin $keepEntities}
-        foreach ($entity in $removeEntities) {
-            Write-Verbose "Removing entity from schema: $($entity.name)"
-            $xml.entities.RemoveChild($entity) | Out-Null
+    process
+    {
+        if($PSCmdlet.MyInvocation.InvocationName -eq 'Set-CrmSchemaFile') {
+            Write-Warning "$($PSCmdlet.MyInvocation.InvocationName) is a deprecated name and will be removed in a future version, use $($PSCmdlet.CommandRuntime) instead"
         }
-    }
 
-    if($DisableAllEntityPlugins) {
-        foreach($entity in $xml.entities.entity) {
-            # disable plugins on the entity
-            Write-Verbose "Disabling plugins on entity: $($entity.name)"
-            $entity.SetAttribute("disableplugins", "true")
-        }
-    }
+        $xml = [xml](Get-Content -Path $Path -Encoding UTF8)
 
-    if($DisableEntityPluginsFilter) {
-        $matchedEntities = $xml.entities.entity | Where-Object -FilterScript $DisableEntityPluginsFilter
-        foreach ($entity in $matchedEntities) {
-            Write-Verbose "Disabling plugins on entity: $($entity.name)"
-            $entity.SetAttribute("disableplugins", "true")
-        }
-    }
-
-    if($UpdateComparePrimaryIdFilter) {
-        $matchedEntities = $xml.entities.entity | Where-Object -FilterScript $UpdateComparePrimaryIdFilter
-        foreach ($entity in $matchedEntities) {
-            Write-Verbose "Setting updateCompare to primaryidfield on entity: $($entity.name)"
-            # remove the updateCompare attribute from any fields to ensure we don't end up with any unintended fields having the attribute at the end
-            $entity.fields.ChildNodes | Where-Object {$_.Attributes['updateCompare'] -ne $null} | ForEach-Object {$_.RemoveAttribute('updateCompare')}
-            # set updateCompare on the entity's primaryidfield
-            $entity.fields.ChildNodes | Where-Object {$_.name -eq $entity.primaryidfield} | ForEach-Object {
-                $updateCompare = $xml.CreateAttribute("updateCompare")
-                $updateCompare.Value = "true"
-                $_.Attributes.InsertBefore($updateCompare, $_.Attributes[0]) | Out-Null
+        if($EntityFilter) {
+            $keepEntities = $xml.entities.entity | Where-Object -FilterScript $EntityFilter
+            $removeEntities = $xml.entities.entity | Where-Object -FilterScript {$_ -notin $keepEntities}
+            foreach ($entity in $removeEntities) {
+                Write-Verbose "Removing entity from schema: $($entity.name)"
+                $xml.entities.RemoveChild($entity) | Out-Null
             }
         }
-    }
 
-    if($UpdateComparePrimaryNameFilter) {
-        $matchedEntities = $xml.entities.entity | Where-Object -FilterScript $UpdateComparePrimaryNameFilter
-        foreach ($entity in $matchedEntities) {
-            Write-Verbose "Setting updateCompare to primarynamefield on entity: $($entity.name)"
-            # remove the updateCompare attribute from any fields to ensure we don't end up with any unintended fields having the attribute at the end
-            $entity.fields.ChildNodes | Where-Object {$_.Attributes['updateCompare'] -ne $null} | ForEach-Object {$_.RemoveAttribute('updateCompare')}
-            # set updateCompare on the entity's primaryidfield
-            $entity.fields.ChildNodes | Where-Object {$_.name -eq $entity.primarynamefield} | ForEach-Object {
-                $updateCompare = $xml.CreateAttribute("updateCompare")
-                $updateCompare.Value = "true"
-                $_.Attributes.InsertBefore($updateCompare, $_.Attributes[0]) | Out-Null
+        if($DisableAllEntityPlugins) {
+            foreach($entity in $xml.entities.entity) {
+                # disable plugins on the entity
+                Write-Verbose "Disabling plugins on entity: $($entity.name)"
+                $entity.SetAttribute("disableplugins", "true")
             }
         }
-    }
 
-    if($UpdateCompareEntityFields) {
-        foreach($entity in $xml.entities.entity) {
-            # if a fields list has been specified for the current entity
-            if($fields = $UpdateCompareEntityFields[$entity.name]) {
-                Write-Verbose "Setting updateCompare to $($fields -join ',') on entity: $($entity.name)"
+        if($DisableEntityPluginsFilter) {
+            $matchedEntities = $xml.entities.entity | Where-Object -FilterScript $DisableEntityPluginsFilter
+            foreach ($entity in $matchedEntities) {
+                Write-Verbose "Disabling plugins on entity: $($entity.name)"
+                $entity.SetAttribute("disableplugins", "true")
+            }
+        }
+
+        if($UpdateComparePrimaryIdFilter) {
+            $matchedEntities = $xml.entities.entity | Where-Object -FilterScript $UpdateComparePrimaryIdFilter
+            foreach ($entity in $matchedEntities) {
+                Write-Verbose "Setting updateCompare to primaryidfield on entity: $($entity.name)"
                 # remove the updateCompare attribute from any fields to ensure we don't end up with any unintended fields having the attribute at the end
                 $entity.fields.ChildNodes | Where-Object {$_.Attributes['updateCompare'] -ne $null} | ForEach-Object {$_.RemoveAttribute('updateCompare')}
-
-                $entity.fields.ChildNodes | Where-Object {$_.name -in $fields} | ForEach-Object {
+                # set updateCompare on the entity's primaryidfield
+                $entity.fields.ChildNodes | Where-Object {$_.name -eq $entity.primaryidfield} | ForEach-Object {
                     $updateCompare = $xml.CreateAttribute("updateCompare")
                     $updateCompare.Value = "true"
                     $_.Attributes.InsertBefore($updateCompare, $_.Attributes[0]) | Out-Null
                 }
             }
         }
-    }
 
-    if($FieldFilter) {
-        foreach($entity in $xml.entities.entity) {
-            $keepFields = $entity.fields.ChildNodes | Where-Object -FilterScript $FieldFilter
-            $removeFields = $entity.fields.ChildNodes | Where-Object -FilterScript {$_ -notin $keepFields}
-            foreach ($remove in $removeFields) {
-                Write-Verbose "Removing field from entity $($entity.name): $($remove.name)"
-                $entity.fields.RemoveChild($remove) | Out-Null
+        if($UpdateComparePrimaryNameFilter) {
+            $matchedEntities = $xml.entities.entity | Where-Object -FilterScript $UpdateComparePrimaryNameFilter
+            foreach ($entity in $matchedEntities) {
+                Write-Verbose "Setting updateCompare to primarynamefield on entity: $($entity.name)"
+                # remove the updateCompare attribute from any fields to ensure we don't end up with any unintended fields having the attribute at the end
+                $entity.fields.ChildNodes | Where-Object {$_.Attributes['updateCompare'] -ne $null} | ForEach-Object {$_.RemoveAttribute('updateCompare')}
+                # set updateCompare on the entity's primaryidfield
+                $entity.fields.ChildNodes | Where-Object {$_.name -eq $entity.primarynamefield} | ForEach-Object {
+                    $updateCompare = $xml.CreateAttribute("updateCompare")
+                    $updateCompare.Value = "true"
+                    $_.Attributes.InsertBefore($updateCompare, $_.Attributes[0]) | Out-Null
+                }
             }
         }
-    }
 
-    if($EntityFieldFilters) {
-        foreach($entity in $xml.entities.entity) {
-            # if a fields filter has been specified for the current entity
-            if($filter = $EntityFieldFilters[$entity.name]) {
-                $keepFields = $entity.fields.ChildNodes | Where-Object -FilterScript $filter
+        if($UpdateCompareEntityFields) {
+            foreach($entity in $xml.entities.entity) {
+                # if a fields list has been specified for the current entity
+                if($fields = $UpdateCompareEntityFields[$entity.name]) {
+                    Write-Verbose "Setting updateCompare to $($fields -join ',') on entity: $($entity.name)"
+                    # remove the updateCompare attribute from any fields to ensure we don't end up with any unintended fields having the attribute at the end
+                    $entity.fields.ChildNodes | Where-Object {$_.Attributes['updateCompare'] -ne $null} | ForEach-Object {$_.RemoveAttribute('updateCompare')}
+
+                    $entity.fields.ChildNodes | Where-Object {$_.name -in $fields} | ForEach-Object {
+                        $updateCompare = $xml.CreateAttribute("updateCompare")
+                        $updateCompare.Value = "true"
+                        $_.Attributes.InsertBefore($updateCompare, $_.Attributes[0]) | Out-Null
+                    }
+                }
+            }
+        }
+
+        if($FieldFilter) {
+            foreach($entity in $xml.entities.entity) {
+                $keepFields = $entity.fields.ChildNodes | Where-Object -FilterScript $FieldFilter
                 $removeFields = $entity.fields.ChildNodes | Where-Object -FilterScript {$_ -notin $keepFields}
                 foreach ($remove in $removeFields) {
                     Write-Verbose "Removing field from entity $($entity.name): $($remove.name)"
@@ -1386,9 +1374,23 @@ function Edit-CrmSchemaFile {
                 }
             }
         }
-    }
 
-    Set-Content -Path $Destination -Value (Format-Xml -xml $xml.OuterXml) -Encoding UTF8
+        if($EntityFieldFilters) {
+            foreach($entity in $xml.entities.entity) {
+                # if a fields filter has been specified for the current entity
+                if($filter = $EntityFieldFilters[$entity.name]) {
+                    $keepFields = $entity.fields.ChildNodes | Where-Object -FilterScript $filter
+                    $removeFields = $entity.fields.ChildNodes | Where-Object -FilterScript {$_ -notin $keepFields}
+                    foreach ($remove in $removeFields) {
+                        Write-Verbose "Removing field from entity $($entity.name): $($remove.name)"
+                        $entity.fields.RemoveChild($remove) | Out-Null
+                    }
+                }
+            }
+        }
+
+        Set-Content -Path $Destination -Value (Format-Xml -xml $xml.OuterXml) -Encoding UTF8
+    }
 }
 
 function Test-CrmOrganization {
