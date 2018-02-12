@@ -166,8 +166,10 @@ function Expand-CrmData {
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         $Folder
     )
-
-    CrmConfigurationPackager -Extract -Path $ZipFile -DestinationPath $Folder
+    process
+    {
+        CrmConfigurationPackager -Extract -Path $ZipFile -DestinationPath $Folder
+    }
 }
 
 <#
