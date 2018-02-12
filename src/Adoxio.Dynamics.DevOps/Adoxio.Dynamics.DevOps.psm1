@@ -105,7 +105,8 @@ function Expand-CrmSolution {
         # sleep for 1 second to avoid the solution packager error "Access to the path '<path-to-folder>' is denied".
         Start-Sleep -Seconds 1
 
-        $solutionPackagerArgs = "/action:Extract",
+        $solutionPackagerArgs = "/nologo",
+                                "/action:Extract",
                                 "/zipfile:$ZipFile",
                                 "/packagetype:$PackageType",
                                 "/folder:$Folder"
