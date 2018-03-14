@@ -4,7 +4,7 @@
 RootModule = 'Adoxio.Dynamics.DevOps.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.7.0'
+ModuleVersion = '0.8.0'
 
 # ID used to uniquely identify this module
 GUID = '7481fd7b-2563-4e29-b9ee-14d53943ff8e'
@@ -35,7 +35,7 @@ ProcessorArchitecture = 'None'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
-    @{ModuleName='Microsoft.Xrm.Data.PowerShell'; ModuleVersion='2.6'; Guid='7df9c140-65c3-4862-b3bc-73fad633aae4'}
+    @{ModuleName='Microsoft.Xrm.Data.Powershell'; ModuleVersion='2.8.0'; Guid='7df9c140-65c3-4862-b3bc-73fad633aae4'}
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -58,8 +58,8 @@ PrivateData = @{
         # A URL to an icon representing this module.
         IconUri = 'https://www.adoxio.com/adoxio-icon.png'
 
-        # ReleaseNotes of this module
-        ReleaseNotes = 'Initial public release.'
+        # Release notes of this module
+        ReleaseNotes = 'Dynamics 365 v9 compatibility'
 
     } # End of PSData hashtable
 

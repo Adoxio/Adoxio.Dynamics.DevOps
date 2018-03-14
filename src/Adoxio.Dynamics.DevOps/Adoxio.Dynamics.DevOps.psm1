@@ -1,5 +1,25 @@
 ﻿Set-StrictMode -Version Latest
 
+function GetSolutionPackagerFolder {
+    if(Test-Path "$env:CRM_SDK_PATH\Bin\SolutionPackager.exe") { # CRM 8.x SDK)
+        return "$env:CRM_SDK_PATH\Bin"
+    } elseif(Test-Path "$env:CRM_SDK_PATH\CoreTools\SolutionPackager.exe") { # CRM 9.x SDK
+        return "$env:CRM_SDK_PATH\CoreTools"
+    } else {
+        throw "SolutionPackager.exe could not be found. Verify the CRM_SDK_PATH environment variable has been set to the 'SDK' folder for CRM 8.x SDK, or the 'Tools' folder for CRM 9.x SDK."
+    }
+}
+
+function GetPackageDeployerFolder {
+    if(Test-Path "$env:CRM_SDK_PATH\Tools\PackageDeployer\PackageDeployer.exe") { # CRM 8.x SDK)
+        return "$env:CRM_SDK_PATH\Tools\PackageDeployer"
+    } elseif(Test-Path "$env:CRM_SDK_PATH\PackageDeployment\PackageDeployer.exe") { # CRM 9.x SDK
+        return "$env:CRM_SDK_PATH\PackageDeployment"
+    } else {
+        throw "PackageDeployer.exe could not be found. Verify the CRM_SDK_PATH environment variable has been set to the 'SDK' folder for CRM 8.x SDK, or the 'Tools' folder for CRM 9.x SDK."
+    }
+}
+
 <#
 .Synopsis
    Packages an unpacked CRM solution folder using the SolutionPackager tool.
@@ -43,7 +63,8 @@ function Compress-CrmSolution {
     )
     process
     {
-        $solutionPackagerArgs = "/action:Pack",
+        $solutionPackagerArgs = "/nologo",
+                                "/action:Pack",
                                 "/folder:$Folder",
                                 "/packagetype:$PackageType",
                                 "/zipfile:$ZipFile"
@@ -53,7 +74,7 @@ function Compress-CrmSolution {
         }
 
         # extract the solutions
-        & "$env:CRM_SDK_PATH\Bin\SolutionPackager.exe" $solutionPackagerArgs
+        & "$(GetSolutionPackagerFolder)\SolutionPackager.exe" $solutionPackagerArgs
     }
 }
 
@@ -116,7 +137,7 @@ function Expand-CrmSolution {
         }
 
         # extract the solutions
-        & "$env:CRM_SDK_PATH\Bin\SolutionPackager.exe" $solutionPackagerArgs
+        & "$(GetSolutionPackagerFolder)\SolutionPackager.exe" $solutionPackagerArgs
     }
 }
 
@@ -587,13 +608,7 @@ function CrmConfigurationPackager {
         if(Get-Item -Path $DestinationPath -OutVariable DestinationFullPath -ErrorAction Ignore) {
             Write-Verbose "Removing destination path before creating: $DestinationPath"
 
-            $confirmation = Read-Host "Remove destination path and continue extracting? (y/n): $DestinationFullPath"
-
-            if ($confirmation.ToLower() -eq 'y') {
-                Remove-Item -Path $DestinationFullPath -Recurse -Force
-            } else {
-                exit
-            }
+            Remove-Item -Path $DestinationFullPath -Recurse -Force
         }
 
         if([IO.Path]::GetExtension($Path) -eq '.zip') {
@@ -689,7 +704,7 @@ function New-CrmPackage {
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $PackageFolder = "$env:CRM_SDK_PATH\Tools\PackageDeployer\Adoxio.Dynamics.ImportPackage"
+        $PackageFolder = "$(GetPackageDeployerFolder)\Adoxio.Dynamics.ImportPackage"
     )
     process
     {
@@ -744,13 +759,13 @@ function Invoke-ImportCrmPackage {
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $PackageDeployerFolder = "$env:CRM_SDK_PATH\Tools\PackageDeployer",
+        $PackageDeployerFolder = "$(GetPackageDeployerFolder)",
 
         # The folder path to the package to import.
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $PackageFolder = "$env:CRM_SDK_PATH\Tools\PackageDeployer\Adoxio.Dynamics.ImportPackage",
+        $PackageFolder = "$(GetPackageDeployerFolder)\Adoxio.Dynamics.ImportPackage",
 
         # The name of the assembly (.dll) containing the package definition.
         [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -769,14 +784,25 @@ function Invoke-ImportCrmPackage {
         try {
             # register and run the Import-CrmPackage cmdlet in a job, to avoid file locking and other negative side effects to the current PowerShell session
             $job = Start-Job -ScriptBlock {
-                Push-Location (Convert-Path $using:PackageDeployerFolder\PowerShell)
-                .\RegisterXRMTooling.ps1 | Out-Null
-                Add-PSSnapin -Name Microsoft.Xrm.Tooling.Connector
-                Add-PSSnapin -Name Microsoft.Xrm.Tooling.PackageDeployment
-                Pop-Location
-
+                
                 $crmConnectionParams = $using:CrmConnectionParameters
-                $crmConnection = Microsoft.Xrm.Tooling.Connector\Get-CrmConnection @CrmConnectionParams
+                
+                Push-Location $using:PackageDeployerFolder
+
+                if(Test-Path .\PowerShell) { # CRM 8.x SDK
+                    cd .\PowerShell
+                } elseif(Test-Path .\Microsoft.Xrm.Tooling.PackageDeployment.Powershell) { # CRM 9.x SDK
+                    cd .\Microsoft.Xrm.Tooling.PackageDeployment.Powershell
+                } else {
+                    throw "Package Deployer PowerShell module not found, verify it is installed."
+                }
+
+                Import-Module .\Microsoft.Xrm.Tooling.CrmConnector.Powershell.dll
+                Import-Module .\Microsoft.Xrm.Tooling.PackageDeployment.Powershell.dll
+                # fully qualify the call to Get-CrmConnection to use the version from the package deployer to avoid a potential conflict with the version distributed with Microsoft.Xrm.Data.Powershell
+                $crmConnection = Microsoft.Xrm.Tooling.CrmConnector.Powershell\Get-CrmConnection @crmConnectionParams
+
+                Pop-Location
 
                 Import-CrmPackage –CrmConnection $crmConnection –PackageDirectory (Split-Path $using:PackageFolder) –PackageName $using:PackageName -Verbose
             }
@@ -895,8 +921,11 @@ function Restore-CrmRemoteOrganization {
         }
     }
     finally { # use finally to ensure the session is removed if the script execution is stopped
-        # end the session
-        Remove-PSSession -Session $session
+        if($session -eq $null) {
+            Write-Error "Unable to establish a PowerShell remoting session to $ComputerName. Ensure the computer is turned on, PowerShell remoting is enabled, and remoting is verified to work using the Enter-PSSession command."
+        } else {
+            Remove-PSSession -Session $session
+        }
     }
 }
 

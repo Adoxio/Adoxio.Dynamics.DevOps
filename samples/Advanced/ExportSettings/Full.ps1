@@ -1,3 +1,12 @@
+# this file contains the settings for:
+#   - exporting solutions
+#   - unpacking solutions
+#   - modifying a Configuration Migration Tool (CMT) schema file
+#   - unpacking a Configuration Migration Tool (CMT) generated data zip file to individual files
+# this file typically does not need to be modified, but the files it refers to would be, including:
+#   - CrmDataPackages\Default.ps1
+#   - CrmSchemaSettings\Default.ps1
+#   - CrmSolutions\Unmanaged.ps1
 param (
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
@@ -5,41 +14,47 @@ param (
     $CrmConnectionParameters
 )
 
-$projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$scriptsRoot = Split-Path -Parent $PSScriptRoot
+$projectRoot = Split-Path -Parent $scriptsRoot
 
 @{
     ExportSolutions = [PSCustomObject]@{
         CrmConnectionParameters = $CrmConnectionParameters
         Solutions = @(
             [PSCustomObject]@{
-                SolutionName = '{todo:Solution1}'
+                SolutionName = 'AdventureWorks'
                 Managed = $false
-                ZipFile = "$projectRoot\temp\export\{todo:Solution1}.zip"
+                ZipFile = "$projectRoot\temp\export\AdventureWorks.zip"
             },
             [PSCustomObject]@{
-                SolutionName = '{todo:Solution1}'
+                SolutionName = 'AdventureWorks'
                 Managed = $true
-                ZipFile = "$projectRoot\temp\export\{todo:Solution1}_managed.zip"
+                ZipFile = "$projectRoot\temp\export\AdventureWorks_managed.zip"
             },
             [PSCustomObject]@{
-                SolutionName = 'Solution2'
+                SolutionName = 'Contoso'
                 Managed = $false
-                TargetVersion = "8.0"
-                ZipFile = "$projectRoot\temp\export\{todo:Solution2}.zip"
+                ZipFile = "$projectRoot\temp\export\Contoso.zip"
+            },
+            [PSCustomObject]@{
+                SolutionName = 'Contoso'
+                Managed = $true
+                ZipFile = "$projectRoot\temp\export\Contoso_managed.zip"
             }
         )
     }
     ExtractSolutions = @(
         [PSCustomObject]@{
-            ZipFile = "$projectRoot\temp\export\{todo:Solution1}.zip"
-            MappingXmlFile = "$projectRoot\crm\solutions\{todo:Solution1}.mappings.xml"
+            ZipFile = "$projectRoot\temp\export\AdventureWorks.zip"
+            MappingXmlFile = "$projectRoot\crm\solutions\AdventureWorks.mappings.xml"
             PackageType = 'Both' # Unmanaged, Managed, Both
-            Folder = "$projectRoot\crm\solutions\{todo:Solution1}"
+            Folder = "$projectRoot\crm\solutions\AdventureWorks"
         },
         [PSCustomObject]@{
-            ZipFile = "$projectRoot\temp\export\{todo:Solution2}.zip"
-            PackageType = 'Unmanaged' # Unmanaged, Managed, Both
-            Folder = "$projectRoot\crm\solutions\{todo:Solution2}"
+            ZipFile = "$projectRoot\temp\export\Contoso.zip"
+            MappingXmlFile = "$projectRoot\crm\solutions\Contoso.mappings.xml"
+            PackageType = 'Both' # Unmanaged, Managed, Both
+            Folder = "$projectRoot\crm\solutions\Contoso"
         }
     )
     CrmSchemaSettings = [PSCustomObject]@{
@@ -63,7 +78,7 @@ $projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
         }
     }
     ExtractData = [PSCustomObject]@{
-        ZipFile = "$projectRoot\temp\export\{todo:FeatureName}Data.zip"
-        Folder = "$projectRoot\crm\data\{todo:FeatureName}"
+        ZipFile = "$projectRoot\temp\export\FabrikamFiberData.zip"
+        Folder = "$projectRoot\crm\data\FabrikamFiber"
     }
 }

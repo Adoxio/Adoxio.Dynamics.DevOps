@@ -26,17 +26,36 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="CrmConnectionParameters\" />
-    <Folder Include="ImportSettings\" />
-    <Folder Include="ExportSettings\" />
+    <Folder Include="Advanced\" />
+    <Folder Include="Advanced\CrmConnectionParameters\" />
+    <Folder Include="Advanced\CrmOrganizationProvisionSettings\" />
+    <Folder Include="Advanced\ImportSettings\" />
+    <Folder Include="Advanced\ExportSettings\" />
+    <Folder Include="Simple\" />
+    <Folder Include="Simple\CrmConnectionParameters\" />
+    <Folder Include="Simple\CrmOrganizationProvisionSettings\" />
+    <Folder Include="Simple\CrmSchemaSettings\" />
+    <Folder Include="Simple\Settings\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrmConnectionParameters\Local-Name1.ps1" />
-    <Compile Include="CrmConnectionParameters\Online-Name1.ps1" />
-    <Compile Include="Export.ps1" />
-    <Compile Include="ExportSettings\Environment1Settings.ps1" />
-    <Compile Include="Import.ps1" />
-    <Compile Include="ImportSettings\Environment1Settings.ps1" />
+    <Compile Include="Advanced\Export.ps1" />
+    <Compile Include="Advanced\Import.ps1" />
+    <Compile Include="Advanced\CrmConnectionParameters\InternetFacingDeployment.ps1" />
+    <Compile Include="Advanced\CrmConnectionParameters\Online.ps1" />
+    <Compile Include="Advanced\CrmConnectionParameters\OnPremise.ps1" />
+    <Compile Include="Advanced\CrmOrganizationProvisionSettings\New.ps1" />
+    <Compile Include="Advanced\ExportSettings\Full.ps1" />
+    <Compile Include="Advanced\ImportSettings\Full.ps1" />
+    <Compile Include="Simple\Export.ps1" />
+    <Compile Include="Simple\Import.ps1" />
+    <Compile Include="Simple\CrmConnectionParameters\InternetFacingDeployment.ps1" />
+    <Compile Include="Simple\CrmConnectionParameters\Online.ps1" />
+    <Compile Include="Simple\CrmConnectionParameters\OnPremise.ps1" />
+    <Compile Include="Simple\CrmOrganizationProvisionSettings\New.ps1" />
+    <Compile Include="Simple\CrmSchemaSettings\Default.ps1" />
+    <Compile Include="Simple\Settings\Default.ps1" />
+    <Compile Include="Simple\Settings\GenerateImportSettings.ps1" />
+    <Compile Include="Simple\Settings\GenerateExportSettings.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
