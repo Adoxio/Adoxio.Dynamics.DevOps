@@ -4,7 +4,7 @@
 RootModule = 'Adoxio.Dynamics.DevOps.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.8.0'
+ModuleVersion = '0.8.1'
 
 # ID used to uniquely identify this module
 GUID = '7481fd7b-2563-4e29-b9ee-14d53943ff8e'
@@ -16,7 +16,7 @@ Author = 'Adoxio'
 CompanyName = 'Adoxio Business Solutions'
 
 # Copyright statement for this module
-Copyright = '(c) 2017 Adoxio Business Solutions Ltd. All rights reserved.'
+Copyright = '(c) 2018 KPMG Adoxio Business Solutions Ltd. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Adoxio.Dynamics.DevOps provides functions for performing Microsoft Dynamics 365 development and deployment (DevOps) oriented tasks.'
