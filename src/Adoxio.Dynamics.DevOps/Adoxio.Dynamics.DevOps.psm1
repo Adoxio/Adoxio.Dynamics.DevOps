@@ -781,10 +781,16 @@ function Invoke-ImportCrmPackage {
     )
     process
     {
+        # the current version of ssl/tls
+        $securityProtocolVersion = [Net.ServicePointManager]::SecurityProtocol
+
         try {
             # register and run the Import-CrmPackage cmdlet in a job, to avoid file locking and other negative side effects to the current PowerShell session
             $job = Start-Job -ScriptBlock {
-                
+
+                # inherit the version of ssl/tls inside the job
+                [Net.ServicePointManager]::SecurityProtocol = $using:securityProtocolVersion
+
                 $crmConnectionParams = $using:CrmConnectionParameters
                 
                 Push-Location $using:PackageDeployerFolder
