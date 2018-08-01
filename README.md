@@ -9,9 +9,9 @@ Adoxio.Dynamics.DevOps is a PowerShell module for performing DevOps activities f
   Install-Module -Name Adoxio.Dynamics.DevOps -Scope CurrentUser
   ```
 - Download and install the [Dynamics 365 v9.x SDK](https://github.com/amervitz/dynamics-365-customer-engagement/blob/021335a079c9fbef7ad26b64ac1c796c14aee1dd/ce/developer/download-tools-nuget.md#download-tools-using-powershell)
-- Create an environment variable named `CRM_SDK_PATH` and set it to the folder path of the downloaded tools. The folder path to use is the one containing the `Tools` folder. This can be done in PowerShell by executing this code:
+- Create an environment variable named `CRM_SDK_PATH` and set it to the folder path of the downloaded tools. The folder path to use is the `Tools` folder containing the `ConfigurationMigration`, `CoreTools`, `PackageDeployment`, and `PluginRegistration` folder. This can be done in PowerShell by executing this code:
   ```PowerShell
-  [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\SDK", "User")
+  [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\Tools", "User")
   ```
 
 ## Installation for Dynamics 365 v8.x
@@ -25,7 +25,7 @@ An abbreviated version is as follows:
   Install-Module -Name Adoxio.Dynamics.DevOps -Scope CurrentUser
   ```
 - Download and install the [Dynamics 365 v8.x SDK](https://www.microsoft.com/en-us/download/details.aspx?id=50032)
-- Create an environment variable named `CRM_SDK_PATH` and set it to the folder path of the extracted Dynamics 365 SDK folder on your computer. The folder path to use is the one containing the `Bin`, `Resources`, `SampleCode`, `Schemas`, `Templates`, and `Tools` folders. This can be done in PowerShell by executing this code:
+- Create an environment variable named `CRM_SDK_PATH` and set it to the folder path of the extracted Dynamics 365 SDK folder on your computer. The folder path to use is the `SDK` folder containing the `Bin`, `Resources`, `SampleCode`, `Schemas`, `Templates`, and `Tools` folders. This can be done in PowerShell by executing this code:
   ```PowerShell
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\SDK", "User")
   ```
