@@ -32,15 +32,15 @@ if($exportSettings.ExtractSolutions -and ('All' -in $Actions -or 'Solutions' -in
     $exportSettings.ExtractSolutions | Expand-CrmSolution
 }
 
-# before Set-CrmSchemaFile: manually generate schema file using configuration migration tool (todo: replace with automated Appium)
+# before Edit-CrmSchemaFile: manually generate schema file using configuration migration tool (todo: replace with automated Appium)
 
 if($exportSettings.CrmSchemaSettings -and ('Edit-CrmSchemaFile' -in $Actions) -and (Test-Path -Path $exportSettings.CrmSchemaSettings.Path)) {
     $exportSettings.CrmSchemaSettings | Edit-CrmSchemaFile
 }
 
-# after Set-CrmSchemaFile: manually export data using configuration migration tool (todo: replace with automated Appium)
+# after Edit-CrmSchemaFile: manually export data using configuration migration tool (todo: replace with automated Appium)
 
-if($exportSettings.ExtractData -and  ('All' -in $Actions -or 'Expand-CrmData' -in $Actions) -and (Test-Path -Path $exportSettings.ExtractData.ZipFile)) {
+if($exportSettings.ExtractData -and ('All' -in $Actions -or 'Expand-CrmData' -in $Actions) -and (Test-Path -Path $exportSettings.ExtractData.ZipFile)) {
     $exportSettings.ExtractData | Expand-CrmData -Verbose
     .\PostExportScripts\DeleteNonWebfileAnnotations.ps1 -Path $exportSettings.ExtractData.Folder
 }
