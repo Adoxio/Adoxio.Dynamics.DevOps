@@ -3,10 +3,6 @@
 #   - unpacking solutions
 #   - modifying a Configuration Migration Tool (CMT) schema file
 #   - unpacking a Configuration Migration Tool (CMT) generated data zip file to individual files
-# this file typically does not need to be modified, but the files it refers to would be, including:
-#   - CrmDataPackages\Default.ps1
-#   - CrmSchemaSettings\Default.ps1
-#   - CrmSolutions\Unmanaged.ps1
 param (
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]

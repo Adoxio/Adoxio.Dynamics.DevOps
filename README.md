@@ -30,9 +30,20 @@ An abbreviated version is as follows:
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\SDK", "User")
   ```
 
-## Development
+## Scripting Usage
 
-To load the project, ensure that you have [Git](https://git-scm.com/downloads) installed to obtain the source code, and [Visual Studio 2017](https://docs.microsoft.com/en-us/visualstudio/welcome-to-visual-studio) with the [PowerShell Tools for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=AdamRDriscoll.PowerShellToolsforVisualStudio2017-18561) extension to easily view and edit the code.
+Walkthrough instructions are available in the blog post [Adding Adoxio.Dynamics.DevOps Scripts to a Project](https://alanmervitz.com/2018/10/15/adding-adoxio-dynamics-devops-scripts-to-a-project/).
+
+An abbreviated version is as follows:
+
+- Copy and rename the `samples/Advanced` folder from this project to the root of your own project with the name `scripts`
+- Edit or create files inside the `CrmConnectionParameters`, `ExportSettings` and `ImportSettings` folders to describe the environments, solutions, and data that will be used during exports and imports
+- Update the parameters at the top of the `Export.ps1` and `Import.ps1` files to refer to the file names used in the previous step
+- Invoke the `Export.ps1` and `Import.ps1` scripts to execute exports and imports
+
+## Project Development
+
+To load this project for making changes to the PowerShell module and samples, ensure that you have [Git](https://git-scm.com/downloads) installed to obtain the source code, and [Visual Studio 2017](https://docs.microsoft.com/en-us/visualstudio/welcome-to-visual-studio) with the [PowerShell Tools for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=AdamRDriscoll.PowerShellToolsforVisualStudio2017-18561) extension to easily view and edit the code.
 
 - Clone the repository using Git:
   ```sh

@@ -28,7 +28,6 @@
   <ItemGroup>
     <Folder Include="Advanced\" />
     <Folder Include="Advanced\CrmConnectionParameters\" />
-    <Folder Include="Advanced\CrmOrganizationProvisionSettings\" />
     <Folder Include="Advanced\ImportSettings\" />
     <Folder Include="Advanced\ExportSettings\" />
     <Folder Include="Simple\" />
@@ -43,7 +42,6 @@
     <Compile Include="Advanced\CrmConnectionParameters\InternetFacingDeployment.ps1" />
     <Compile Include="Advanced\CrmConnectionParameters\Online.ps1" />
     <Compile Include="Advanced\CrmConnectionParameters\OnPremise.ps1" />
-    <Compile Include="Advanced\CrmOrganizationProvisionSettings\New.ps1" />
     <Compile Include="Advanced\ExportSettings\Full.ps1" />
     <Compile Include="Advanced\ImportSettings\Full.ps1" />
     <Compile Include="Simple\Export.ps1" />
