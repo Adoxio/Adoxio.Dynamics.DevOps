@@ -32,7 +32,9 @@ An abbreviated version is as follows:
 
 ## Scripting Usage
 
-Walkthrough instructions are available in the blog post [Adding Adoxio.Dynamics.DevOps Scripts to a Project](https://alanmervitz.com/2018/10/15/adding-adoxio-dynamics-devops-scripts-to-a-project/).
+Walkthrough instructions are available in the following blog posts:
+- [Adding Adoxio.Dynamics.DevOps Scripts to a Project](https://alanmervitz.com/2018/10/15/adding-adoxio-dynamics-devops-scripts-to-a-project/)
+- [Scripted Solution Exports with Adoxio.Dynamics.DevOps](https://alanmervitz.com/2018/10/22/scripted-solution-exports-with-adoxio-dynamics-devops/)
 
 An abbreviated version is as follows:
 
