@@ -4,7 +4,7 @@
 RootModule = 'Adoxio.Dynamics.DevOps.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.8.1'
+ModuleVersion = '0.9.0'
 
 # ID used to uniquely identify this module
 GUID = '7481fd7b-2563-4e29-b9ee-14d53943ff8e'
@@ -59,7 +59,7 @@ PrivateData = @{
         IconUri = 'https://www.adoxio.com/adoxio-icon.png'
 
         # Release notes of this module
-        ReleaseNotes = 'Dynamics 365 v9 compatibility'
+        ReleaseNotes = 'Added the OverwriteUnmanagedCustomizations parameter to New-CrmPackage'
 
     } # End of PSData hashtable
 

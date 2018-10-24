@@ -704,7 +704,12 @@ function New-CrmPackage {
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $PackageFolder = "$(GetPackageDeployerFolder)\Adoxio.Dynamics.ImportPackage"
+        $PackageFolder = "$(GetPackageDeployerFolder)\Adoxio.Dynamics.ImportPackage",
+
+        # Whether to overwite unmanaged customizations to all solutions during import. Default is $false.
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [switch]
+        $OverwriteUnmanagedCustomizations = $false
     )
     process
     {
@@ -723,7 +728,7 @@ function New-CrmPackage {
         @($SolutionZipFiles,$DataZipFile) | Where-Object { $_ -ne "" } | Copy-Item -Destination $PackageFolder
 
         # generate the ImportConfig.xml file and copy it to the package directory
-        NewCrmImportConfigXml -DataZipFile $DataZipFile -SolutionZipFiles $SolutionZipFiles -ImportData:$ImportData -PackageFolder $PackageFolder
+        NewCrmImportConfigXml -DataZipFile $DataZipFile -SolutionZipFiles $SolutionZipFiles -ImportData:$ImportData -PackageFolder $PackageFolder -OverwriteUnmanagedCustomizations:$OverwriteUnmanagedCustomizations
 
         # copy the package dll to the package directory
         Copy-Item -Path $PackageDllFile -Destination (Split-Path $PackageFolder) -ErrorAction SilentlyContinue
@@ -832,7 +837,8 @@ function NewCrmImportConfigXml {
         [string]$DataZipFile,
         [string[]]$SolutionZipFiles,
         [switch]$ImportData,
-        [string]$PackageFolder
+        [string]$PackageFolder,
+        [switch]$OverwriteUnmanagedCustomizations
     )
 
     if($DataZipFile -and $ImportData) {
@@ -845,7 +851,9 @@ function NewCrmImportConfigXml {
     $solutionsXml = ""
     foreach($zipFile in $SolutionZipFiles) {
         $solutionzipfilename = Split-Path -Path $zipFile -Leaf
-        $solutionsXml = $solutionsXml + "<configsolutionfile solutionpackagefilename=""$solutionzipfilename"" />`n"
+        $solutionpackagefilenameattribute = "solutionpackagefilename=""$solutionzipfilename"""
+        $overwriteunmanagedcustomizationsattribute = "overwriteunmanagedcustomizations=""$($OverwriteUnmanagedCustomizations.ToString().ToLower())"""
+        $solutionsXml = $solutionsXml + "<configsolutionfile $solutionpackagefilenameattribute $overwriteunmanagedcustomizationsattribute />`n"
     }
 
     $importConfig = @"
