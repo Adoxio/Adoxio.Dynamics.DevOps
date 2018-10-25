@@ -11,7 +11,10 @@ param (
 
     [ValidateSet("Managed","Unmanaged")]
     [string]
-    $PackageType = "Unmanaged"
+    $PackageType = "Unmanaged",
+
+    [switch]
+    $OverwriteUnmanagedCustomizations
 )
 
 $scriptsRoot = Split-Path -Parent $PSScriptRoot
@@ -45,6 +48,7 @@ $solutionExt = if($PackageType -eq "Managed") { "_managed" }
                 "$projectRoot\temp\packed\AdventureWorks$solutionExt.zip",
                 "$projectRoot\temp\packed\Contoso$solutionExt.zip"
             )
+            OverwriteUnmanagedCustomizations = $OverwriteUnmanagedCustomizations.ToBool()
         }
     )
     #CrmOrganizationProvisionDefinition = [PSCustomObject]@{

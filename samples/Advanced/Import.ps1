@@ -19,6 +19,10 @@
     [switch]
     $OverwriteOrganization,
 
+    # Whether to overwrite unmanaged customizations during solution imports
+    [switch]
+    $OverwriteUnmanagedCustomizations,
+
     # The available actions to perform during the import
     [ValidateSet("All","Restore-CrmRemoteOrganization","Compress-CrmData","Compress-CrmSolution","New-CrmPackage","Invoke-ImportCrmPackage")]
     [string[]]
@@ -29,7 +33,7 @@ $global:ErrorActionPreference = "Stop"
 
 $CrmConnectionParameters = & "$PSScriptRoot\CrmConnectionParameters\$CrmConnectionName.ps1"
 
-$settings = & "$PSScriptRoot\ImportSettings\$ImportSettings.ps1" -CrmConnectionParameters $CrmConnectionParameters -PackageType $PackageType
+$settings = & "$PSScriptRoot\ImportSettings\$ImportSettings.ps1" -CrmConnectionParameters $CrmConnectionParameters -PackageType $PackageType -OverwriteUnmanagedCustomizations:$OverwriteUnmanagedCustomizations
 
 if($settings.CrmOrganizationProvisionDefinition -and $CrmConnectionParameters.ServerUrl -eq 'http://dyn365.contoso.com' -and ("All" -in $Actions -or 'Restore-CrmRemoteOrganization' -in $Actions)) {
     $settings.CrmOrganizationProvisionDefinition | Restore-CrmRemoteOrganization -Force:$OverwriteOrganization
