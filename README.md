@@ -8,7 +8,7 @@ Adoxio.Dynamics.DevOps is a PowerShell module for performing DevOps activities f
   ```PowerShell
   Install-Module -Name Adoxio.Dynamics.DevOps -Scope CurrentUser
   ```
-- Download and install the [Dynamics 365 v9.x SDK](https://github.com/amervitz/dynamics-365-customer-engagement/blob/021335a079c9fbef7ad26b64ac1c796c14aee1dd/ce/developer/download-tools-nuget.md#download-tools-using-powershell)
+- Download and install the [Dynamics 365 v9.x SDK](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/download-tools-nuget#download-tools-using-powershell)
 - Create an environment variable named `CRM_SDK_PATH` and set it to the folder path of the downloaded tools. The folder path to use is the `Tools` folder containing the `ConfigurationMigration`, `CoreTools`, `PackageDeployment`, and `PluginRegistration` folder. This can be done in PowerShell by executing this code:
   ```PowerShell
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\Tools", "User")
