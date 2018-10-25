@@ -802,8 +802,10 @@ function Invoke-ImportCrmPackage {
 
                 if(Test-Path .\PowerShell) { # CRM 8.x SDK
                     cd .\PowerShell
-                } elseif(Test-Path .\Microsoft.Xrm.Tooling.PackageDeployment.Powershell) { # CRM 9.x SDK
+                } elseif(Test-Path .\Microsoft.Xrm.Tooling.PackageDeployment.Powershell) { # CRM 9.x SDK PowerShell module in the draft location of an early pull request
                     cd .\Microsoft.Xrm.Tooling.PackageDeployment.Powershell
+                } elseif(Test-Path ..\PackageDeployment.PowerShell) { # CRM 9.x SDK PowerShell module in the official location of the accepted pull request
+                    cd ..\PackageDeployment.PowerShell
                 } else {
                     throw "Package Deployer PowerShell module not found, verify it is installed."
                 }
