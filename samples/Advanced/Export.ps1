@@ -7,18 +7,17 @@
 
     # The settings for the actions performed during the export
     [Parameter(Mandatory)]
-    [ValidateSet("Full")] # update this list based on files in the ExportSettings folder
+    [ValidateSet('Full')] # update this list based on files in the ExportSettings folder
     [string]
     $ExportSettings,
 
     # The available actions to perform during the export
-    [Parameter(Mandatory)]
-    [ValidateSet("All","Solutions","Export-CrmSolutions","Expand-CrmSolutions","Edit-CrmSchemaFile","Expand-CrmData")]
+    [ValidateSet('All','Solutions','Export-CrmSolutions','Expand-CrmSolutions','Edit-CrmSchemaFile','Expand-CrmData')]
     [string[]]
-    $Actions
+    $Actions = 'All'
 )
 
-$global:ErrorActionPreference = "Stop"
+$global:ErrorActionPreference = 'Stop'
 
 $CrmConnectionParameters = & "$PSScriptRoot\CrmConnectionParameters\$CrmConnectionName.ps1"
 

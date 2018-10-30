@@ -12,10 +12,9 @@
     $Settings,
 
     # The actions to perform during script execution
-    [Parameter(Mandatory)]
     [ValidateSet('All','Solutions','Export-CrmSolutions','Expand-CrmSolutions','Edit-CrmSchemaFile','Expand-CrmData')]
     [string[]]
-    $Actions
+    $Actions = 'All'
 )
 
 $global:ErrorActionPreference = 'Stop'
