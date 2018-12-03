@@ -13,6 +13,7 @@ Adoxio.Dynamics.DevOps is a PowerShell module for performing DevOps activities f
   ```PowerShell
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\Tools", "User")
   ```
+- Restart PowerShell for the new environment variable to take effect
 
 ## Installation for Dynamics 365 v8.x
 
@@ -29,6 +30,7 @@ An abbreviated version is as follows:
   ```PowerShell
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\SDK", "User")
   ```
+- Restart PowerShell for the new environment variable to take effect
 
 ## Scripting Usage
 
