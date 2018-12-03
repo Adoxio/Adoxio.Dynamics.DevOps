@@ -4,7 +4,7 @@
 RootModule = 'Adoxio.Dynamics.DevOps.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.10.0'
+ModuleVersion = '0.10.1'
 
 # ID used to uniquely identify this module
 GUID = '7481fd7b-2563-4e29-b9ee-14d53943ff8e'
