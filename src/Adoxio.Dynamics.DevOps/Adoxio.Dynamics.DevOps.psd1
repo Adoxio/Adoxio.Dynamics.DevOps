@@ -60,8 +60,6 @@ PrivateData = @{
 
         # Release notes of this module
         ReleaseNotes = 'Added the New-AppSourcePackage function'
-        
-        ExternalModuleDependencies = @('Microsoft.Xrm.Data.Powershell')
     } # End of PSData hashtable
 
 } # End of PrivateData hashtable
