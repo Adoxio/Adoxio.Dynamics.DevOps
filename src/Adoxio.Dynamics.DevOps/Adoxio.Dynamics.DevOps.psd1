@@ -35,7 +35,8 @@ ProcessorArchitecture = 'None'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
-    @{ModuleName='Microsoft.Xrm.Data.Powershell'; ModuleVersion='2.8.0'; Guid='7df9c140-65c3-4862-b3bc-73fad633aae4'}
+    @{ModuleName='Microsoft.Xrm.Data.Powershell'; ModuleVersion='2.8.0'; Guid='7df9c140-65c3-4862-b3bc-73fad633aae4'},
+	@{ModuleName='Microsoft.Xrm.DevOps.Data.PowerShell'; ModuleVersion='1.3.0'; Guid='1636c4d2-b523-4b40-8dae-90338809d081'}
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
