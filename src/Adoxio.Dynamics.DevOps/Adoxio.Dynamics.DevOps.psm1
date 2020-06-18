@@ -362,44 +362,44 @@ function CreateRootSchema {
 }
 <#
 .Synopsis
-	Exports configuration data from CRM organization into a DataMigration utility compatible zip file.
+    Exports configuration data from CRM organization into a DataMigration utility compatible zip file.
 .DESCRIPTION
-	This function exports CRM data based on supplied configuration migration schema file settings saves it to a zip file.
+    This function exports CRM data based on supplied configuration migration schema file settings saves it to a zip file.
 .EXAMPLE
-   >
-	$CrmConnectionParameters = @{
-       OrganizationName = 'contoso'
-       ServerUrl = 'http://dyn365.contoso.com'
-       Credential = [PSCredential]::new("contoso\administrator", ("pass@word1" | ConvertTo-SecureString -AsPlainText -Force))
-   }
+ >
+    $CrmConnectionParameters = @{
+        OrganizationName = 'contoso'
+        ServerUrl = 'http://dyn365.contoso.com'
+        Credential = [PSCredential]::new("contoso\administrator", ("pass@word1" | ConvertTo-SecureString -AsPlainText -Force))
+    }
 
-	$SchemaFile = "C:\myproj\schema.xml"
+    $SchemaFile = "C:\myproj\schema.xml"
 
-	$ZipFile = "C:\temp\export\mydata.zip"
+    $ZipFile = "C:\temp\export\mydata.zip"
 
-	Export-CrmData -CrmConnectionParameters $CrmConnectionParameters -SchemaFile $SchemaFile -ZipFile $ZipFile -DisablePl
+    Export-CrmData -CrmConnectionParameters $CrmConnectionParameters -SchemaFile $SchemaFile -ZipFile $ZipFile
 #>
 function Export-CrmData{
-	param (
+    param (
         [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [hashtable]
         $CrmConnectionParameters,
 
-		[ValidateNotNullOrEmpty()]
+        [ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$SchemaFile,
 
-		[ValidateNotNullOrEmpty()]
+        [ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$ZipFile	        
-	)
-	process
+    )
+    process
     {				
         $CrmConnection = Get-CrmConnection @CrmConnectionParameters
 
         Export-CrmDataFile -CrmConnection $CrmConnection -SchemaFile $SchemaFile -DataFile $ZipFile
-	}	
+    }	
 }
 
 function ExtractData {
