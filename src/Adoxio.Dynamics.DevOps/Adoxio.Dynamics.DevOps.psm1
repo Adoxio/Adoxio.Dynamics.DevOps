@@ -364,8 +364,7 @@ function CreateRootSchema {
 .Synopsis
 	Exports configuration data from CRM organization into a DataMigration utility compatible zip file.
 .DESCRIPTION
-	This function exports CRM data based on one more fetchXml expressions and saves it to a zip file compatible with the DataMigration utility. See
-	Microsoft.Xrm.DevOps.Data.PowerShell for details on Get-CrmDataPackage settings.
+	This function exports CRM data based on supplied configuration migration schema file settings saves it to a zip file.
 .EXAMPLE
    >
 	$CrmConnectionParameters = @{
@@ -374,15 +373,11 @@ function CreateRootSchema {
        Credential = [PSCredential]::new("contoso\administrator", ("pass@word1" | ConvertTo-SecureString -AsPlainText -Force))
    }
 
-	$Fetches = @(
-            "<fetch><entity name='contact'><all-attributes/></entity></fetch>", 
-			"<fetch><entity name='category'><all-attributes/></entity></fetch>")
-
-	$Identifiers @{ "contact" = @("firstname", "lastname", "birthdate") }
+	$SchemaFile = "C:\myproj\schema.xml"
 
 	$ZipFile = "C:\temp\export\mydata.zip"
 
-	Export-CrmData -CrmConnectionParameters $CrmConnectionParameters -Fetches $Fetches -Identifiers $Identifiers -ZipFile $ZipFile -DisablePlugins
+	Export-CrmData -CrmConnectionParameters $CrmConnectionParameters -SchemaFile $SchemaFile -ZipFile $ZipFile -DisablePl
 #>
 function Export-CrmData{
 	param (
@@ -395,33 +390,17 @@ function Export-CrmData{
 
 		[ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [string[]]$Fetches,
+        [string]$SchemaFile,
 
 		[ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [string]$ZipFile,
-		
-        [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [hashtable]$Identifiers = @{},
-
-		[Parameter(ValueFromPipelineByPropertyName=$true)]
-        [switch]$DisablePlugins = $false
+        [string]$ZipFile	        
 	)
 	process
     {				
         $CrmConnection = Get-CrmConnection @CrmConnectionParameters
 		
-		## ZipFile creation fails if path does not exist so make sure it is there
-		$path = Split-Path -Path $ZipFile
-		md -Force $path
-
-		if($DisablePlugins){
-			Get-CrmDataPackage -Conn $CrmConnection -Fetches $Fetches -Identifiers $Identifiers -DisablePluginsGlobally $true | Export-CrmDataPackage -ZipPath $ZipFile
-		}
-		else{
-			Get-CrmDataPackage -Conn $CrmConnection -Fetches $Fetches -Identifiers $Identifiers -DisablePluginsGlobally $false | Export-CrmDataPackage -ZipPath $ZipFile
-		}
-    
+		Export-CrmDataFile -CrmConnection $CrmConnection -SchemaFile $SchemaFile -DataFile $ZipFile
 	}
 	
 }
