@@ -381,9 +381,7 @@ function CreateRootSchema {
 #>
 function Export-CrmData{
 	param (
-		[Parameter(
-           ValueFromPipelineByPropertyName=$true,
-            Mandatory=$true)]
+        [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [hashtable]
         $CrmConnectionParameters,
@@ -400,9 +398,8 @@ function Export-CrmData{
     {				
         $CrmConnection = Get-CrmConnection @CrmConnectionParameters
 
-	    Export-CrmDataFile -CrmConnection $CrmConnection -SchemaFile $SchemaFile -DataFile $ZipFile
-	}
-	
+        Export-CrmDataFile -CrmConnection $CrmConnection -SchemaFile $SchemaFile -DataFile $ZipFile
+	}	
 }
 
 function ExtractData {
