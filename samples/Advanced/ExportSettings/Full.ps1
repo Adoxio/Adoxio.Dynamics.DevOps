@@ -76,10 +76,10 @@ $projectRoot = Split-Path -Parent $scriptsRoot
 
 	# ExportData is used by export.ps1. Defines configuration data schema file to use for export and the zip file to put the data in.
     ExportData = [PSCustomObject]@{
-		CrmConnectionParameters = $CrmConnectionParameters
+        CrmConnectionParameters = $CrmConnectionParameters
         SchemaFile ="$projectRoot\temp\export\schema.xml"
         ZipFile = "$projectRoot\temp\export\FabrikamFiberData.zip"
-        }
+    }
 
     ExtractData = [PSCustomObject]@{
         ZipFile = "$projectRoot\temp\export\FabrikamFiberData.zip"
