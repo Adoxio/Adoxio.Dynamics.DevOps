@@ -12,7 +12,7 @@
     $ExportSettings,
 
     # The available actions to perform during the export
-    [ValidateSet('All','Solutions','Data','Export-CrmSolutions','Expand-CrmSolutions','Edit-CrmSchemaFile','Expand-CrmData')]
+    [ValidateSet('All','Solutions','Data','Export-CrmSolutions','Expand-CrmSolutions','Edit-CrmSchemaFile','Export-CrmData','Expand-CrmData')]
     [string[]]
     $Actions = 'All'
 )
