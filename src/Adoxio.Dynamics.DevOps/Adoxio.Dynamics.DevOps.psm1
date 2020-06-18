@@ -360,26 +360,22 @@ function CreateRootSchema {
 
     return $rootSchema
 }
+
 <#
 .Synopsis
-    Exports configuration data from CRM organization into a DataMigration utility compatible zip file.
+    Exports configuration data from CRM organization into a Configuration Migration tool zip file.
 .DESCRIPTION
-    This function exports CRM data based on supplied configuration migration schema file settings saves it to a zip file.
+    This function exports CRM data based on supplied configuration migration schema file settings and saves it to a Configuration Migration tool zip file.
 .EXAMPLE
- >
     $CrmConnectionParameters = @{
         OrganizationName = 'contoso'
         ServerUrl = 'http://dyn365.contoso.com'
         Credential = [PSCredential]::new("contoso\administrator", ("pass@word1" | ConvertTo-SecureString -AsPlainText -Force))
     }
 
-    $SchemaFile = "C:\myproj\schema.xml"
-
-    $ZipFile = "C:\temp\export\mydata.zip"
-
-    Export-CrmData -CrmConnectionParameters $CrmConnectionParameters -SchemaFile $SchemaFile -ZipFile $ZipFile
+    Export-CrmData -CrmConnectionParameters $CrmConnectionParameters -SchemaFile 'C:\temp\schema.xml' -ZipFile 'C:\temp\export\AdventureWorksData.zip'
 #>
-function Export-CrmData{
+function Export-CrmData {
     param (
         [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
@@ -392,14 +388,14 @@ function Export-CrmData{
 
         [ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [string]$ZipFile	        
+        [string]$ZipFile
     )
     process
-    {				
+    {
         $CrmConnection = Get-CrmConnection @CrmConnectionParameters
 
         Export-CrmDataFile -CrmConnection $CrmConnection -SchemaFile $SchemaFile -DataFile $ZipFile
-    }	
+    }
 }
 
 function ExtractData {

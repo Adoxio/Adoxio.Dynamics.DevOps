@@ -73,8 +73,6 @@ $projectRoot = Split-Path -Parent $scriptsRoot
             account = {$_ -in 'accountid','parentaccountid'} #  only export accountid and parentaccountid fields
         }
     }
-
-	# ExportData is used by export.ps1. Defines configuration data schema file to use for export and the zip file to put the data in.
     ExportData = [PSCustomObject]@{
         CrmConnectionParameters = $CrmConnectionParameters
         SchemaFile ="$projectRoot\temp\export\schema.xml"
