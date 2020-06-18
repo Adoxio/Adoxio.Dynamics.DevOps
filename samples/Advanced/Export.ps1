@@ -12,7 +12,7 @@
     $ExportSettings,
 
     # The available actions to perform during the export
-    [ValidateSet('All','Solutions','Export-CrmSolutions','Expand-CrmSolutions','Edit-CrmSchemaFile','Expand-CrmData')]
+    [ValidateSet('All','Solutions','Data','Export-CrmSolutions','Expand-CrmSolutions','Edit-CrmSchemaFile','Expand-CrmData')]
     [string[]]
     $Actions = 'All'
 )
@@ -35,6 +35,10 @@ if($settings.CrmSchemaSettings -and ('All' -in $Actions -or 'Edit-CrmSchemaFile'
     $settings.CrmSchemaSettings | Edit-CrmSchemaFile
 }
 
-if($settings.ExtractData -and  ('All' -in $Actions -or 'Expand-CrmData' -in $Actions) -and (Test-Path -Path $settings.ExtractData.ZipFile)) {
+if($settings.ExportData -and ('All' -in $Actions -or 'Data' -in $Actions -or 'Export-CrmData' -in $Actions) -and (Test-Path -Path $settings.ExportData.SchemaFile)) {
+    $settings.ExportData | Export-CrmData
+}
+
+if($settings.ExtractData -and  ('All' -in $Actions -or 'Data' -in $Actions -or 'Expand-CrmData' -in $Actions) -and (Test-Path -Path $settings.ExtractData.ZipFile)) {
     $settings.ExtractData | Expand-CrmData -Verbose
 }
