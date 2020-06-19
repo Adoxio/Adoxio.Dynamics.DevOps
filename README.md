@@ -56,6 +56,10 @@ Extracts a Configuration Migration tool generated zip file and unpacks the .xml 
 
 Extracts a CRM solution file to its individual components using the SolutionPackager tool included in the Dynamics 365 SDK.
 
+### [Export-CrmData](docs/functions/Export-CrmData.md)
+
+Extracts configuration data using the Configuration Migration Tool PowerShell module.
+
 ### [Export-CrmSolutions](docs/functions/Export-CrmSolutions.md)
 
 Exports a list of solutions from a CRM organization.
