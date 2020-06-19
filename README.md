@@ -13,6 +13,7 @@ Adoxio.Dynamics.DevOps is a PowerShell module for performing DevOps activities f
   ```PowerShell
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\Tools", "User")
   ```
+- Restart PowerShell for the new environment variable to take effect
 
 ## Installation for Dynamics 365 v8.x
 
@@ -29,8 +30,67 @@ An abbreviated version is as follows:
   ```PowerShell
   [Environment]::SetEnvironmentVariable("CRM_SDK_PATH", "C:\Path\To\SDK", "User")
   ```
+- Restart PowerShell for the new environment variable to take effect
 
-## Scripting Usage
+## Functions
+
+This module includes the following functions that can be used individually to implement tailored scripting needs.
+
+### [Compress-CrmData](docs/functions/Compress-CrmData.md)
+
+Packs and zips a folder of Configuration Migration tool generated files previously created from the `Expand-CrmData` cmdlet.
+
+### [Compress-CrmSolution](docs/functions/Compress-CrmSolution.md)
+
+Packages an unpacked CRM solution folder using the SolutionPackager tool.
+
+### [Edit-CrmSchemaFile](docs/functions/Edit-CrmSchemaFile.md)
+
+Modifies a Configuration Migration tool schema file to control the list of entities and fields that are included during an export, and the settings to use when importing the records using the Configuration Migration tool and Package Deployer.
+
+### [Expand-CrmData](docs/functions/Expand-CrmData.md)
+
+Extracts a Configuration Migration tool generated zip file and unpacks the .xml files into separate files and folders, where each entity is stored in its own folder and each record is stored in its own .xml file inside the entity folder.
+
+### [Expand-CrmSolution](docs/functions/Expand-CrmSolution.md)
+
+Extracts a CRM solution file to its individual components using the SolutionPackager tool included in the Dynamics 365 SDK.
+
+### [Export-CrmSolutions](docs/functions/Export-CrmSolutions.md)
+
+Exports a list of solutions from a CRM organization.
+
+### [Invoke-ImportCrmPackage](docs/functions/Invoke-ImportCrmPackage.md)
+
+Imports a package to a Microsoft Dynamics CRM instance.
+
+### [New-AppSourcePackage](docs/functions/New-AppSourcePackage.md)
+
+Creates an AppSource package.
+
+### [New-CrmPackage](docs/functions/New-CrmPackage.md)
+
+This function creates a package for use with the Dynamics CRM Package deployer included in the Dynamics 365 SDK.
+
+### [Remove-CrmOrganization](docs/functions/Remove-CrmOrganization.md)
+
+Deletes an existing on-premise CRM organization from a local CRM server.
+
+### [Remove-CrmRemoteOrganization](docs/functions/Remove-CrmRemoteOrganization.md)
+
+Deletes an existing on-premise CRM organization from a remote CRM server.
+
+### [Restore-CrmOrganization](docs/functions/Restore-CrmOrganization.md)
+
+Creates a new on-premise CRM organization on a local CRM server by restoring from a backup.
+
+### [Restore-CrmRemoteOrganization](docs/functions/Restore-CrmRemoteOrganization.md)
+
+Creates a new on-premise CRM organization on a remote server by restoring from a backup.
+
+## Prescriptive Scripting Usage
+
+This project includes prescriptive samples for defining a series of actions that manage the full lifecyle of exporting and importing customizations and data from Dynamics 365 organizations. The samples are a combination of declaritive configuration files and scripts that use the configuration files to execute exports and imports.
 
 Walkthrough instructions are available in the following blog posts:
 - [Adding Adoxio.Dynamics.DevOps Scripts to a Project](https://alanmervitz.com/2018/10/15/adding-adoxio-dynamics-devops-scripts-to-a-project/)
@@ -58,11 +118,11 @@ To load this project for making changes to the PowerShell module and samples, en
 
 The primary folders in this repository are:
 
-- [/src/Adoxio.Dynamics.DevOps](https://github.com/Adoxio/Adoxio.Dynamics.DevOps/tree/master/src/Adoxio.Dynamics.DevOps) - the main PowerShell module implemented using advanced functions
+- [/src/Adoxio.Dynamics.DevOps](src/Adoxio.Dynamics.DevOps) - the main PowerShell module implemented using advanced functions
 
-- [/src/Adoxio.Dynamics.ImportPackage](https://github.com/Adoxio/Adoxio.Dynamics.DevOps/tree/master/src/Adoxio.Dynamics.ImportPackage) - a generic [CRM Package](https://msdn.microsoft.com/en-us/library/dn688182.aspx) used to import solutions and data with the Dynamics 365 SDK's [Package Deployer](https://technet.microsoft.com/en-us/library/dn647420.aspx)
+- [/src/Adoxio.Dynamics.ImportPackage](src/Adoxio.Dynamics.ImportPackage) - a generic [CRM Package](https://msdn.microsoft.com/en-us/library/dn688182.aspx) used to import solutions and data with the Dynamics 365 SDK's [Package Deployer](https://technet.microsoft.com/en-us/library/dn647420.aspx)
 
-- [/samples](https://github.com/Adoxio/Adoxio.Dynamics.DevOps/tree/master/samples) - sample code for PowerShell scripts that perform imports and exports using the module
+- [/samples](samples) - sample code for PowerShell scripts that perform imports and exports using the module
 
 ## Support
 

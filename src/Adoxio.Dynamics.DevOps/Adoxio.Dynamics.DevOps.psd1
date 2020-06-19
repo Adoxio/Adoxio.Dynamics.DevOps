@@ -4,7 +4,7 @@
 RootModule = 'Adoxio.Dynamics.DevOps.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.9.0'
+ModuleVersion = '0.10.1'
 
 # ID used to uniquely identify this module
 GUID = '7481fd7b-2563-4e29-b9ee-14d53943ff8e'
@@ -35,7 +35,7 @@ ProcessorArchitecture = 'None'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
-    @{ModuleName='Microsoft.Xrm.Data.Powershell'; ModuleVersion='2.8.0'; Guid='7df9c140-65c3-4862-b3bc-73fad633aae4'},
+    @{ModuleName='Microsoft.Xrm.Data.Powershell'; ModuleVersion='2.8.1.3'; Guid='7df9c140-65c3-4862-b3bc-73fad633aae4'},
     @{ModuleName='Microsoft.Xrm.Tooling.ConfigurationMigration'; ModuleVersion='1.0.0.44'; Guid='162392C2-EDE9-4754-B5A3-7DE42E5C768C'}
 )
 
@@ -60,8 +60,7 @@ PrivateData = @{
         IconUri = 'https://www.adoxio.com/adoxio-icon.png'
 
         # Release notes of this module
-        ReleaseNotes = 'Added the OverwriteUnmanagedCustomizations parameter to New-CrmPackage'
-
+        ReleaseNotes = 'Added the New-AppSourcePackage function'
     } # End of PSData hashtable
 
 } # End of PrivateData hashtable

@@ -1503,3 +1503,131 @@ function Show-CrmDiagnostics {
 
     Start-Process "$OrganizationUrl/tools/diagnostics/diag.aspx"
 }
+
+<#
+.Synopsis
+   Creates an AppSource package.
+.DESCRIPTION
+   This function creates an AppSource package as described at https://docs.microsoft.com/en-us/azure/marketplace/cloud-partner-portal-orig/appsource-package-preparation.
+#>
+function New-AppSourcePackage {
+    param (
+        # The file path to the logo file.
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $LogoPath,
+
+        # The file path to the terms of use file.
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $TermsOfUsePath,
+
+        # The file path to the input.xml file.
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $InputXmlPath,
+
+        # The folder containing the package contents. This can be ommitted if the package has been created beforehand using New-CrmPackage and using the default behavior of using the Adoxio.Dynamics.ImportPackage folder.
+        [string]
+        $PackageFolder = "$(GetPackageDeployerFolder)\Adoxio.Dynamics.ImportPackage",
+
+        # The package assembly for importing the package. This can be ommitted if the package has been created beforehand using New-CrmPackage and using the default behavior of using the Adoxio.Dynamics.ImportPackage.dll assembly.
+        [string]
+        $PackageAssembly = "$(GetPackageDeployerFolder)\Adoxio.Dynamics.ImportPackage.dll",
+
+        # The file path to save the AppSource package zip file.
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $DestinationPath
+    )
+    process
+    {
+        # create a temporary folder for generating the AppSource package
+        $outputTempFolder = (Split-Path -Path $DestinationPath) + "\AppSource_$(Get-Date -Format yyyyMMdd_HHmmss)"
+
+        # load the ImportConfig.xml manifest file for obtaining the solutions in the package
+        $importConfig = [xml](Get-Content -Path "$PackageFolder\ImportConfig.xml")
+
+        # unzip all the solutions as listed in the ImportConfig.xml file and get the file types in each solution
+        $extensions = @()
+        foreach($solutionpackagefilename in $importConfig.configdatastorage.solutions.configsolutionfile.solutionpackagefilename) {
+            $solutionPackageFolder = [IO.Path]::GetFileNameWithoutExtension($solutionpackagefilename)
+            Expand-Archive -Path "$PackageFolder\$solutionpackagefilename" -DestinationPath "$outputTempFolder\solutions\$solutionPackageFolder"
+            
+            $contentTypesPath = Join-Path -Path "$outputTempFolder\solutions\$solutionPackageFolder" -ChildPath "[Content_Types].xml"
+            $contentTypesXml = [xml](Get-Content -LiteralPath $contentTypesPath)
+            $extensions += $contentTypesXml.Types.Default.Extension
+        }
+
+        # create the folder to place the crm package
+        $crmPackageFolder = New-Item -Path "$outputTempFolder\CrmPackage" -ItemType Directory
+        
+        # copy the package folder and package assembly to the crm package (package.zip)
+        Copy-Item -Path $PackageFolder -Destination $crmPackageFolder -Recurse
+        Copy-Item -Path $PackageAssembly -Destination $crmPackageFolder
+
+        # create the [Content_Types].xml file for the crm package (package.zip)
+        # add dll and zip to the list of file extensions for the Adoxio.Dynamics.ImportPackage.dll file and the solution zip files
+        $extensions += "dll","zip"
+        $uniqueExtensions = $extensions | Sort-Object | Get-Unique
+        NewContentTypesXml -Extensions $uniqueExtensions -DestinationPath "$crmPackageFolder\``[Content_Types``].xml"
+
+        # create the zipped version of the crm package (package.zip)
+        $crmPackageZip = "$outputTempFolder\package.zip"
+        Compress-Archive -Path "$outputTempFolder\CrmPackage\*" -DestinationPath $crmPackageZip
+
+        # create the AppSource package folder
+        $appSourcePackageFolder = New-Item -Path "$outputTempFolder\AppSourcePackage" -ItemType Directory
+        @($crmPackageZip, $LogoPath, $TermsOfUsePath, $InputXmlPath) | ForEach-Object { Copy-Item -Path $_ -Destination $appSourcePackageFolder.FullName }
+
+        # get the file extensions in the AppSource package folder and write to Content_Types.xml
+        $crmPackageFileExtensions = Get-ChildItem -Path $appSourcePackageFolder| ForEach-Object { $_.Extension.TrimStart('.') } | Sort-Object | Get-Unique
+        NewContentTypesXml -Extensions $crmPackageFileExtensions -DestinationPath "$appSourcePackageFolder\``[Content_Types``].xml"
+
+        # create the final AppSource package file
+        Compress-Archive -Path "$appSourcePackageFolder\*" -DestinationPath $DestinationPath
+
+        # delete the temporary folder
+        Remove-Item -Path $outputTempFolder -Recurse -Force
+    }
+}
+
+function NewContentTypesXml {
+    param (
+        [Parameter(Mandatory)]
+        [string[]]
+        $Extensions,
+
+        [Parameter(Mandatory)]
+        [string]
+        $DestinationPath
+    )
+    process
+    {
+        $files = $Extensions | % { "<Default Extension=""$_"" ContentType=""application/octet-stream"" />" }
+
+        $contentTypesTemplate = @"
+<?xml version="1.0" encoding="utf-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+    $files
+</Types>
+"@
+        Set-Content -Value (Format-Xml -Xml $contentTypesTemplate -Indent 4) -Path $DestinationPath -Encoding UTF8 -Force
+    }
+}
+
+function GetAppSourcePackageFileExtensions {
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $Path
+    )
+    process
+    {
+        Get-ChildItem -Path $Path | ForEach-Object { $_.Extension.TrimStart('.') } | Sort-Object
+    }
+}
