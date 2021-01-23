@@ -73,6 +73,12 @@ $projectRoot = Split-Path -Parent $scriptsRoot
             account = {$_ -in 'accountid','parentaccountid'} #  only export accountid and parentaccountid fields
         }
     }
+    ExportData = [PSCustomObject]@{
+        CrmConnectionParameters = $CrmConnectionParameters
+        SchemaFile ="$projectRoot\temp\export\schema.xml"
+        ZipFile = "$projectRoot\temp\export\FabrikamFiberData.zip"
+    }
+
     ExtractData = [PSCustomObject]@{
         ZipFile = "$projectRoot\temp\export\FabrikamFiberData.zip"
         Folder = "$projectRoot\crm\data\FabrikamFiber"
