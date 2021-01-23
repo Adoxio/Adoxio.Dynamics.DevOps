@@ -2,6 +2,27 @@
 
 Adoxio.Dynamics.DevOps is a PowerShell module for performing DevOps activities for Dynamics 365 CE.
 
+**This project is no longer actively maintained. Read below for alternative options to the functions within this project.**
+
+See the [CrmDataPackager](https://github.com/amervitz/CrmDataPackager) project for updated versions of these functions:
+- Compress-CrmData
+- Expand-CrmData
+
+See the [Microsoft Power Platform Build Tools tasks](https://docs.microsoft.com/en-us/power-platform/alm/devops-build-tool-tasks) for alternatives to these functions:
+- Compress-CrmSolution
+- Expand-CrmSolution
+- Export-CrmSolutions
+- Invoke-ImportCrmPackage
+- Remove-CrmOrganization
+- Remove-CrmRemoteOrganization
+- Restore-CrmOrganization
+- Restore-CrmRemoteOrganization
+
+[Contact Alan Mervitz](https://alanmervitz.com/contact/) if there's interest in continued use of these functions:
+- Edit-CrmSchemaFile
+- New-AppSourcePackage
+- New-CrmPackage
+
 ## Installation for Dynamics 365 v9.x
 
 - Open Windows PowerShell and install the module from the [PowerShell Gallery](https://www.powershellgallery.com/packages/Adoxio.Dynamics.DevOps/)
